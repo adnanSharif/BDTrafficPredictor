@@ -1,9 +1,13 @@
 package info.adnansharif.bdtrafficpredictor;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,11 +17,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import info.adnansharif.bdtrafficpredictor.SearchFragment.SearchFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SearchFragment.OnFragmentInteractionListener {
+
+    private int mBackButtonPressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,19 +51,59 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Fragment fragmentToLaunch = new SearchFragment();
+        mBackButtonPressed = 0;
+
+        // Check that the activity is using the layout version with
+        // the fragment_container FrameLayout
+        if (findViewById(R.id.fragment_container) != null) {
+
+            // However, if we're being restored from a previous state,
+            // then we don't need to do anything and should return or else
+            // we could end up with overlapping fragments.
+            if (savedInstanceState != null) {
+                return;
+            }
+
+            // Create a new Fragment to be placed in the activity layout
+            Fragment defaultFragment = new SearchFragment();
+
+
+            // In case this activity was started with special instructions from an
+            // Intent, pass the Intent's extras to the fragment as arguments
+            defaultFragment.setArguments(getIntent().getExtras());
+
+            // Add the fragment to the 'fragment_container' FrameLayout
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, defaultFragment).commit();
+        }
         setTitle("Traffic Estimator");
     }
 
     @Override
     public void onBackPressed() {
+        Log.v(this.getApplicationContext().getPackageName(), String.valueOf(mBackButtonPressed));
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+            mBackButtonPressed = 0;
         } else {
-            super.onBackPressed();
+            final Fragment fragmentByTag = getSupportFragmentManager().findFragmentByTag(SearchFragment.class.getName());
+            if (fragmentByTag != null) {
+                //logDebug("fragment found " + fragmentByTag);
+                getSupportFragmentManager().popBackStackImmediate();
+                mBackButtonPressed=0;
+                return;
+            }
+            else if(mBackButtonPressed<2){
+                mBackButtonPressed++;
+                Toast.makeText(this, "Press again to to close the app", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                finish();
+            }
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -103,5 +150,10 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onFragmentInteraction(String str) {
+
     }
 }

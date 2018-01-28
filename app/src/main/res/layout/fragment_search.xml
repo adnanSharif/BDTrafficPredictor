@@ -4,10 +4,60 @@
     android:layout_height="match_parent"
     tools:context="info.adnansharif.bdtrafficpredictor.SearchFragment.SearchFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="5dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Current Position"
+                    android:textColor="#002" />
+                <View
+                    android:layout_width="15dp"
+                    android:layout_height="0dp"/>
+                <AutoCompleteTextView
+                    android:id="@+id/source_point"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="5dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Destination Point"
+                    android:textColor="#002" />
+                <View
+                    android:layout_width="6dp"
+                    android:layout_height="0dp"/>
+                <AutoCompleteTextView
+                    android:id="@+id/destination_point"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+            <Button
+                android:id="@+id/suggest_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Check Now"/>
+    </LinearLayout>
+
+    </RelativeLayout>
 
 </FrameLayout>

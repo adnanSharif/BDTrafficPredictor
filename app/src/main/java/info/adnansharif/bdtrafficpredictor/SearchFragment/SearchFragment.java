@@ -7,6 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.Toast;
 
 import info.adnansharif.bdtrafficpredictor.R;
 
@@ -21,12 +24,16 @@ import info.adnansharif.bdtrafficpredictor.R;
 public class SearchFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String SOURCE = "source";
+    private static final String DESTINATION = "destination";
+
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String mSource;
+    private String mDestination;
+    private Button mSuggestPath;
+    private AutoCompleteTextView mGetSource;
+    private AutoCompleteTextView mGetDestination;
 
     private OnFragmentInteractionListener mListener;
 
@@ -46,8 +53,8 @@ public class SearchFragment extends Fragment {
     public static SearchFragment newInstance(String param1, String param2) {
         SearchFragment fragment = new SearchFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(SOURCE, param1);
+        args.putString(DESTINATION, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,8 +63,8 @@ public class SearchFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mSource = getArguments().getString(SOURCE);
+            mDestination = getArguments().getString(DESTINATION);
         }
     }
 
@@ -65,13 +72,30 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        View fragmentView = inflater.inflate(R.layout.fragment_search, container, false);
+        mGetSource = fragmentView.findViewById(R.id.source_point);
+        mGetDestination = fragmentView.findViewById(R.id.destination_point);
+        mSuggestPath = fragmentView.findViewById(R.id.suggest_button);
+        mSuggestPath.setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mSource = mGetSource.getText().toString();
+                    mDestination = mGetDestination.getText().toString();
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "source = "+mSource+" and destination = "+mDestination,
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        );
+
+        return fragmentView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed(String str) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onFragmentInteraction(str);
         }
     }
 
@@ -104,6 +128,6 @@ public class SearchFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(String str);
     }
 }
